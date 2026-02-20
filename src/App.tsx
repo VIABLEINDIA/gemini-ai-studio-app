@@ -1,27 +1,30 @@
-import { useState } from 'react'
+import { useState, ReactNode } from 'react'
 import './App.css'
 
-function App() {
-  const [input, setInput] = useState('')
-  const [response, setResponse] = useState('')
-  const [loading, setLoading] = useState(false)
+function App(): ReactNode {
+  const [input, setInput] = useState<string>('')
+  const [response, setResponse] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
     if (!input.trim()) return
 
     setLoading(true)
     try {
-      // Gemini API call would go here
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY
+      // Gemini API key from environment variables
+      const apiKey: string | undefined = (import.meta as Record<string, Record<string, Record<string, string | undefined>>>).env.VITE_GEMINI_API_KEY
+      
       if (!apiKey) {
         setResponse('Error: API key not configured')
+        setLoading(false)
         return
       }
+      
       // Placeholder for API integration
       setResponse(`Processing: ${input}`)
     } catch (error) {
-      setResponse(`Error: ${error}`)
+      setResponse(`Error: ${String(error)}`)
     } finally {
       setLoading(false)
     }
